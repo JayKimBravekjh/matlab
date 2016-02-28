@@ -1,0 +1,10 @@
+p = parpool(2);
+spmd
+ sc = RandStream('CombRecursive','Seed',labindex);
+ RandStream.setGlobalStream(sc);
+ Rc = rand(1,4)
+ sg = parallel.gpu.RandStream('CombRecursive','Seed',labindex);
+ parallel.gpu.RandStream.setGlobalStream(sg);
+ Rg = rand(1,4,'gpuArray')
+end
+delete(p)
