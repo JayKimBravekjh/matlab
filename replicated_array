@@ -18,3 +18,7 @@ for i = drange(1:numDataSets)
 end
 res = gather(results, 1);
 if labindex == 1
+plot(1:numDataSets, res);
+ print -dtiff -r300 fig.tiff;
+ save \\central\myResults\today.mat res
+end
