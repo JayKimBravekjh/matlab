@@ -1,0 +1,37 @@
+p = parpool('local',n);
+mr = mapreducer(p);
+outds = mapreduce(tds,@MeanDistMapFun,@MeanDistReduceFun,mr)
+
+p = parpool('local',4);
+inMatlab = mapreducer(0);
+inPool = mapreducer(p);
+
+ds = datastore('airlinesmall.csv','TreatAsMissing','NA',...
+ 'SelectedVariableNames','ArrDelay','ReadSize',1000);
+preview(ds)
+ ArrDelay
+ ________
+ 8
+ 8
+ 21
+ 13
+ 4
+ 59
+ 3
+ 11 
+ 
+ meanDelay = mapreduce(ds,@meanArrivalDelayMapper,@meanArrivalDelayReducer,inMatlab);
+********************************
+* MAPREDUCE PROGRESS *
+********************************
+Map 0% Reduce 0%
+Map 10% Reduce 0%
+Map 20% Reduce 0%
+Map 30% Reduce 0%
+Map 40% Reduce 0%
+Map 50% Reduce 0%
+Map 60% Reduce 0%
+Map 70% Reduce 0%
+Map 80% Reduce 0%
+Map 90% Reduce 0%
+Map 100% Reduce 100%
