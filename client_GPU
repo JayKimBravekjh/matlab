@@ -1,0 +1,29 @@
+Rc = rand(1,4)
+Rc =
+ 0.8147 0.9058 0.1270 0.9134
+Rg = rand(1,4,'gpuArray')
+Rg =  0.7270 0.4522 0.9387 0.2360
+
+sc = RandStream('CombRecursive','Seed',1);
+RandStream.setGlobalStream(sc);
+Rc = rand(1,4)
+Rc =
+ 0.4957 0.2243 0.2073 0.6823
+sg = parallel.gpu.RandStream('CombRecursive','Seed',1);
+parallel.gpu.RandStream.setGlobalStream(sg);
+Rg = rand(1,4,'gpuArray')
+Rg =
+ 0.4957 0.2243 0.2073 0.6823
+
+sc = RandStream('CombRecursive','NormalTransform','Inversion','Seed',1);
+RandStream.setGlobalStream(sc)
+sg = parallel.gpu.RandStream('CombRecursive','NormalTransform','Inversion','Seed',1);
+
+parallel.gpu.RandStream.setGlobalStream(sg);
+Rc = randn(1,4)
+Rc =
+ -0.0108 -0.7577 -0.8159 0.4742
+Rg = randn(1,4,'gpuArray')
+Rg =
+ -0.0108 -0.7577 -0.8159 0.4742
+ 
