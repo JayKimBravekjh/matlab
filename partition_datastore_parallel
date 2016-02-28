@@ -1,0 +1,26 @@
+function [total,count] = sumAndCountArrivalDelay(ds)
+total = 0;
+count = 0;
+while hasdata(ds)
+ data = read(ds);
+ total = total + sum(data.ArrDelay,1,'OmitNaN');
+ count = count + sum(~isnan(data.ArrDelay));
+end
+end
+
+ds = datastore(repmat({'airlinesmall.csv'},20,1),'TreatAsMissing','NA');
+ds.SelectedVariableNames = 'ArrDelay';
+
+reset(ds);
+tic
+ [total,count] = sumAndCountArrivalDelay(ds)
+sumtime = toc
+mean = total/count
+total =
+ 17211680
+count =
+ 2417320
+sumtime =
+ 14.1478
+mean =
+ 7.1201
