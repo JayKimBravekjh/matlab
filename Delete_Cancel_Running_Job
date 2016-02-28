@@ -1,0 +1,16 @@
+c = parcluster('MyGenericProfile');
+% set required properties
+c.CancelJobFcn = @myCancelJob
+c.DeleteJobFcn = @myDeleteJob
+c.CancelTaskFcn = @myCancelTask
+c.DeleteTaskFcn = @myDeleteTask
+
+j1 = createJob(c);
+for ii = 1:n
+ t(ii) = createTask(j1,...)
+end
+submit(j1)
+
+cancel(t(4))
+
+delete(j1)
