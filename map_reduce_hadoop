@@ -1,0 +1,49 @@
+% 
+
+setenv('HADOOP_HOME','/share/hadoop/a2.2.0');
+cluster = parallel.cluster.Hadoop;
+cluster.HadoopProperties('mapred.job.tracker') = 'hadoophost1:50031';
+cluster.HadoopProperties('fs.default.name') = 'hdfs://hadoophost2:8020';
+outputFolder = '/home/user/logs/hadooplog';
+
+
+mr = mapreducer(cluster);
+
+ds = datastore('airlinesmall.csv','TreatAsMissing','NA',...
+ 'SelectedVariableNames','ArrDelay','ReadSize',1000);
+preview(ds)
+ ArrDelay
+ ________
+ 8
+ 8
+ 21
+ 13
+ 4
+ 59
+ 3
+ 11
+ 
+ 
+ meanDelay = mapreduce(ds,@meanArrivalDelayMapper,@meanArrivalDelayReducer,mr,...
+ 'OutputFolder',outputFolder)
+Parallel mapreduce execution on the Hadoop cluster:
+********************************
+* MAPREDUCE PROGRESS *
+********************************
+Map 0% Reduce 0%
+Map 66% Reduce 0%
+Map 100% Reduce 66%
+Map 100% Reduce 100%
+
+meanDelay =
+ KeyValueDatastore with properties:
+ Files: {
+ ' .../tmp/alafleur/tpc00621b1_4eef_4abc_8078_646aa916e7d9/part0.seq'
+ }
+ ReadSize: 1 key-value pairs
+ FileType: 'seq'
+Read the result.
+readall(meanDelay)
+ Key Value
+ __________________ ________
+ 'MeanArrivalDelay' [7.1201]
