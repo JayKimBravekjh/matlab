@@ -1,0 +1,13 @@
+
+
+P>> mpiprofile viewer
+
+pmode start local 4
+
+P>> R1 = rand(16, codistributor())
+P>> R2 = rand(16, codistributor())
+P>> mpiprofile on
+P>> P = R1*R2
+P>> mpiprofile off
+P>> mpiprofile viewer
+
