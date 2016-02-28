@@ -1,0 +1,3 @@
+c = parcluster('my_lsf_profile')
+failedjob = findJob(c, 'State', 'failed');
+message = getDebugLog(c, failedjob(1))
