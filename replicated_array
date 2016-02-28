@@ -1,0 +1,20 @@
+spmd, A = magic(3), end
+
+results = zeros(1, numDataSets);
+for i = 1:numDataSets
+ load(['\\central\myData\dataSet' int2str(i) '.mat'])
+ results(i) = processDataSet(i);
+ end
+plot(1:numDataSets, results);
+save \\central\myResults\today.mat results
+
+
+% The following changes make this code operate in parallel, either interactively in spmd or pmode, or in a communicating job:
+
+results = zeros(1, numDataSets, codistributor());
+for i = drange(1:numDataSets)
+ load(['\\central\myData\dataSet' int2str(i) '.mat'])
+ results(i) = processDataSet(i);
+end
+res = gather(results, 1);
+if labindex == 1
