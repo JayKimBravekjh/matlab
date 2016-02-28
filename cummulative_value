@@ -1,0 +1,6 @@
+x2 = [];
+n = 10;
+parfor i = 1:n
+ x2 = [x2, i];
+end
+x2
