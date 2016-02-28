@@ -1,0 +1,14 @@
+# edit mywave 
+
+for i = 1:1024
+ A(i) = sin(i*2*pi/1024);
+end
+
+job = batch('mywave')
+
+#wait(job)
+#load(job,'A')
+#plot(A)
+
+#delete(job)
+#clear job
