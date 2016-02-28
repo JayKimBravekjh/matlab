@@ -24,3 +24,59 @@ sumtime =
  14.1478
 mean =
  7.1201
+
+
+function [total, count] = parforSumAndCountArrivalDelay(ds)
+N = numpartitions(ds,gcp);
+total = 0;
+count = 0;
+parfor ii = 1:N
+ % Get partition ii of the datastore.
+ subds = partition(ds,N,ii);
+
+ [localTotal,localCount] = sumAndCountArrivalDelay(subds);
+ total = total + localTotal;
+ count = count + localCount;
+end
+end
+
+p = parpool('local',4);
+reset(ds);
+tic
+ [total,count] = parforSumAndCountArrivalDelay(ds)
+parfortime = toc
+mean = total/count
+Starting parallel pool (parpool) using the 'local' profile ... connected to 4 workers.
+Analyzing and transferring files to the workers ...done.
+total =
+ 17211680
+count =
+ 2417320
+parfortime =  8.5203
+mean = 7.1201
+
+function [total,count] = spmdSumAndCountArrivalDelay(ds)
+spmd
+ subds = partition(ds,numlabs,labindex);
+ [total,count] = sumAndCountArrivalDelay(subds);
+end
+total = sum([total{:}]);
+count = sum([count{:}]);
+end
+Now the MATLAB code calls the function that uses an spmd block.
+reset(ds);
+tic
+ [total,count] = spmdSumAndCountArrivalDelay(ds)
+spmdtime = toc
+mean = total/count
+
+total =
+ 17211680
+
+count =
+ 2417320
+spmdtime =
+ 6.2568
+mean =
+ 7.1201
+delete(p);
