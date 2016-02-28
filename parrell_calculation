@@ -1,0 +1,13 @@
+spmd
+ PP = zeros(6,8,12,'codistributed');
+ RR = rand(6,8,12,codistributor())
+ % Default distribution:
+ % by third dimension, evenly across 4 workers.
+ for ii = 1:6
+ for jj = 1:8
+ for kk = drange(1:12)
+ PP(ii,jj,kk) = RR(ii,jj,kk) + labindex;
+ end
+ end
+ end
+end
