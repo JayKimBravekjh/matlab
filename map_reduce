@@ -35,3 +35,25 @@ Map 70% Reduce 0%
 Map 80% Reduce 0%
 Map 90% Reduce 0%
 Map 100% Reduce 100%
+
+
+readall(meanDelay)
+ Key Value
+ __________________ ________
+ 'MeanArrivalDelay' [7.1201]
+ 
+meanDelay = mapreduce(ds,@meanArrivalDelayMapper,@meanArrivalDelayReducer,inPool);
+Parallel mapreduce execution on the parallel pool:
+********************************
+* MAPREDUCE PROGRESS *
+********************************
+Map 0% Reduce 0%
+Map 100% Reduce 50%
+Map 100% Reduce 100%
+
+readall(meanDelay)
+ Key Value
+ __________________ ________
+ 'MeanArrivalDelay' [7.1201]
+ 
+ 
