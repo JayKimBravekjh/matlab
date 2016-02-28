@@ -1,0 +1,54 @@
+% cluster profile selection
+
+parallel.defaultClusterProfile('MyMJSprofile1')
+parpool
+% or
+parpool('MyMJSprofile1')
+
+
+% cluster creation and tasks
+
+c = parcluster('myProfile1');
+job1 = createJob(c); % Uses profile of cluster object c.
+createTask(job1,@rand,1,{3}) % Uses profile of cluster object c.
+
+
+% Create Callbacks at the Command Line
+
+function clientTaskCompleted(task,eventdata)
+ disp(['Finished task: ' num2str(task.ID)])
+
+
+% Create a job and set its QueuedFcn, RunningFcn, and FinishedFcn properties, using a
+% function handle to an anonymous function that sends information to the display.
+
+c = parcluster('MyMJS');
+j = createJob(c,'Name','Job_52a');
+j.QueuedFcn = @(job,eventdata) disp([job.Name ' now ' job.State]);
+j.RunningFcn = @(job,eventdata) disp([job.Name ' now ' job.State]);
+j.FinishedFcn = @(job,eventdata) disp([job.Name ' now ' job.State]);
+
+
+createTask(j,@rand,1,{2,4}, ...
+ 'FinishedFcn',@clientTaskCompleted);
+ 
+Run the job and note the output messages from both the job and task callbacks.
+submit(j)
+Job_52a now queued
+Job_52a now running
+Finished task: 1
+Job_52a now finished
+
+
+function clientTaskCompleted(task,eventdata)
+ disp(['Finished task: ' num2str(task.ID)])
+Create objects for the cluster, job, and task. Then submit the job. All the callback
+properties are set from the profile when the objects are created.
+c = parcluster('MyMJS');
+j = createJob(c,'Name','Job_52a');
+createTask(j,@rand,1,{2,4});
+submit(j)
+Job_52a now queued
+Job_52a now running
+Finished task: 1
+Job_52a now finished
