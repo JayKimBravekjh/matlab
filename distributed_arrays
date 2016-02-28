@@ -1,0 +1,36 @@
+
+M = magic(4) % a 4-by-4 magic square in the client workspace
+MM = distributed(M)
+
+M2 = 2*MM; % M2 is also distributed, calculation performed on workers
+x = M2(1,1) % x on the client is set to first element of M2
+
+
+% The single program multiple data (spmd) construct lets you define a block of code that
+% runs in parallel on all the workers in a parallel pool. The spmd block can run on some or
+% all the workers in the pool.
+
+spmd % By default creates pool and uses all workers
+ R = rand(4);
+end
+
+X = R{3}; % Set X to the value of R from worker 3.
+
+X = X + 2;
+R{3} = X; % Send the value of X from the client to worker 3.
+
+spmd
+ R = R + labindex % Use values of R from previous spmd.
+end
+
+spmd
+ INP = load(['somedatafile' num2str(labindex) '.mat']);
+ RES = somefun(INP)
+end
+
+% Then the values of RES on the workers are accessible from the client as RES{1} from
+% worker 1, RES{2} from worker 2, etc.
+% There are two forms of indexing a Composite, comparable to indexing a cell array:
+% • AA{n} returns the values of AA from worker n.
+% • AA(n) returns a cell array of the content of AA from worker n.
+
