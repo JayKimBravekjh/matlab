@@ -1,0 +1,10 @@
+parpool('local',2) % Create pool
+W = ones(6,6);
+W = distributed(W); % Distribute to the workers
+spmd
+ T = W*2; % Calculation performed on workers, in parallel.
+ % T and W are both codistributed arrays here.
+end
+T % View results in client.
+whos % T and W are both distributed arrays here.
+delete(gcp) % Stop pool
