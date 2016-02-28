@@ -1,0 +1,8 @@
+maps = {containers.Map(),containers.Map(),containers.Map()};
+parfor ii = 1:numel(maps)
+ mymap = maps{ii}; % input slice assigned to local copy
+ for jj = 1:1000
+ mymap(num2str(jj)) = rand;
+ end
+ maps{ii} = mymap; % modified local copy assigned to output slice
+end
