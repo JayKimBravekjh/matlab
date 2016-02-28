@@ -1,0 +1,35 @@
+
+
+R = rand(1,4);
+
+% You can run this script in the client, and then as a batch job on a worker. Notice that the
+% default generated random number sequences in the results are different.
+randScript1; % In client
+
+R
+R =
+ 0.8147 0.9058 0.1270 0.9134
+parallel.defaultClusterProfile('local')
+c = parcluster();
+j = batch(c,'randScript1'); % On worker
+
+wait(j);load(j);
+R
+R =
+ 0.3246 0.6618 0.6349 0.6497
+%For identical results, you can set the client and worker to use the same generator and
+%seed. Here the file randScript2.m contains the following code:
+
+s = RandStream('CombRecursive','Seed',1);
+RandStream.setGlobalStream(s);
+R = rand(1,4);
+%Now, run the new script in the client and on a worker:
+%randScript2; % In client
+R
+R =
+ 0.4957 0.2243 0.2073 0.6823
+j = batch(c,'randScript2'); % On worker
+wait(j); load(j);
+R
+R =
+ 0.4957 0.2243 0.2073 0.6823
