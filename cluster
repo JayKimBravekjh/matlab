@@ -1,0 +1,243 @@
+% Create a Cluster Object
+
+parallel.defaultClusterProfile('local');
+c = parcluster();
+
+% Create a job
+
+job1 = createJob(c)
+ Job
+ Properties:
+ ID: 2
+ Type: Independent
+ Username: eng864
+ State: pending
+ SubmitTime:
+ StartTime:
+ Running Duration: 0 days 0h 0m 0s
+ AutoAttachFiles: true
+ Auto Attached Files: List files
+ AttachedFiles: {}
+ AdditionalPaths: {}
+ Associated Tasks:
+ Number Pending: 0
+ Number Running: 0
+ Number Finished: 0
+ Task ID of Errors: []
+ 
+  Local Cluster
+ Associated Jobs
+ Number Pending: 1
+ Number Queued: 0
+ Number Running: 0
+ Number Finished: 0
+ 
+ % Create Tasks
+ 
+ createTask(job1, @rand, 1, {{3,3} {3,3} {3,3} {3,3} {3,3}});
+The Tasks property of job1 is now a 5-by-1 matrix of task objects.
+job1.Tasks
+ ID State FinishTime Function Error
+ -----------------------------------------------------
+ 1 1 pending @rand
+ 2 2 pending @rand
+ 3 3 pending @rand
+ 4 4 pending @rand
+ 5 5 pending @rand 
+ 
+ % submit job to the cluster 
+ 
+ submit(job1)
+ 
+ % fetch the job result
+ 
+ wait(job1)
+results = fetchOutputs(job1);
+Display the results from each task.
+results{1:5}
+ 0.9501 0.4860 0.4565
+ 0.2311 0.8913 0.0185
+ 0.6068 0.7621 0.8214
+ 0.4447 0.9218 0.4057
+ 0.6154 0.7382 0.9355
+ 0.7919 0.1763 0.9169
+ 0.4103 0.3529 0.1389
+ 0.8936 0.8132 0.2028
+ 0.0579 0.0099 0.1987
+ 0.6038 0.0153 0.9318
+ 0.2722 0.7468 0.4660
+ 0.1988 0.4451 0.4186
+ 0.8462 0.6721 0.6813
+ 0.5252 0.8381 0.3795
+ 0.2026 0.0196 0.8318
+ 
+ c
+job1
+job1.Tasks
+
+parallel.defaultClusterProfile('MyProfile')
+
+% find a cluster 
+c = parcluster('MyProfile');
+ MJS Cluster
+ Properties
+ Name: my_mjs
+ Profile: MyProfile
+ Modified: false
+ Host: node345
+ Username: mylogin
+ NumWorkers: 1
+ NumBusyWorkers: 0
+ NumIdleWorkers: 1
+ JobStorageLocation: Database on node345
+ ClusterMatlabRoot: C:\apps\matlab
+ OperatingSystem: windows
+ AllHostAddresses: 0:0:0:0
+ SecurityLevel: 0 (No security)
+ HasSecureCommunication: false
+ Associated Jobs
+ Number Pending: 0
+ Number Queued: 0
+ Number Running: 0
+ Number Finished: 0
+ 
+% create a job 
+
+ Job
+ Properties:
+ ID: 1
+ Type: Independent
+ Username: mylogin
+ State: pending
+ SubmitTime:
+ StartTime:
+ Running Duration: 0 days 0h 0m 0s
+ AutoAttachFiles: true
+ Auto Attached Files: List files
+ AttachedFiles: {}
+ AdditionalPaths: {}
+ Associated Tasks:
+ Number Pending: 0
+ Number Running: 0
+ Number Finished: 0
+ Task ID of Errors: []
+ 
+ c
+Associated Jobs
+ Number Pending: 1
+ Number Queued: 0
+ Number Running: 0
+ Number Finished: 0
+ 
+% create the tasks 
+createTask(job1, @rand, 1, {3,3});
+createTask(job1, @rand, 1, {3,3});
+createTask(job1, @rand, 1, {3,3});
+createTask(job1, @rand, 1, {3,3});
+createTask(job1, @rand, 1, {3,3});
+The Tasks property of job1 is now a 5-by-1 matrix of task objects.
+job1.Tasks
+ ID State FinishTime Function Error
+ -----------------------------------------------------
+ 1 1 pending @rand
+ 2 2 pending @rand
+ 3 3 pending @rand
+ 4 4 pending @rand
+ 5 5 pending @rand 
+ 
+T = createTask(job1, @rand, 1, {{3,3} {3,3} {3,3} {3,3} {3,3}});
+ 
+% Submit a Job to the Job Queue
+
+submit(job1)
+
+wait(job1)
+results = fetchOutputs(job1);
+Display the results from each task.
+results{1:5}
+ 0.9501 0.4860 0.4565
+ 0.2311 0.8913 0.0185
+ 0.6068 0.7621 0.8214
+ 0.4447 0.9218 0.4057
+ 0.6154 0.7382 0.9355
+ 0.7919 0.1763 0.9169
+ 0.4103 0.3529 0.1389
+ 0.8936 0.8132 0.2028
+ 0.0579 0.0099 0.1987
+ 0.6038 0.0153 0.9318
+ 0.2722 0.7468 0.4660
+ 0.1988 0.4451 0.4186
+ 0.8462 0.6721 0.6813
+ 0.5252 0.8381 0.3795
+ 0.2026 0.0196 0.8318
+
+% You create cluster objects in the client session by using the parcluster function.
+c = parcluster('MyProfile');
+
+all_jobs = c.Jobs
+
+all_jobs = findJob(c);
+finished_jobs = findJob(c,'State','finished')
+
+c = parcluster('MyProfile')
+finished_jobs = findJob(c,'State','finished','Username','joep')
+delete(finished_jobs)
+clear finished_jobs
+
+c = parcluster(); % Use default
+job1 = createJob(c);
+ap = {'/central/funcs','/dept1/funcs', ...
+ '\\OurDomain\central\funcs','\\OurDomain\dept1\funcs'};
+job1.AdditionalPaths = ap;
+
+
+c = parcluster();
+j = createJob(c);
+j.AutoAttachFiles = true;
+The supported code file formats 
+
+% MATLAB Client Submit Function
+
+c.IndependentSubmitFcn = @mysubmitfunc
+function mysubmitfunc(cluster, job, props)
+
+time_limit = 300
+testlocation = 'Plant30'
+c.IndependentSubmitFcn = {@mysubmitfunc, time_limit, testlocation}
+
+function mysubmitfunc(cluster, job, props, localtimeout, plant)
+
+
+function mysubmitfunc(cluster, job, props)
+
+decodeFcn = 'mydecodefunc';
+jobLocation = get(props, 'JobLocation');
+taskLocations = get(props, 'TaskLocations'); %This is a cell array
+storageLocation = get(props, 'StorageLocation');
+storageConstructor = get(props, 'StorageConstructor');
+
+setenv('MDCE_DECODE_FUNCTION', decodeFcn);
+setenv('MDCE_JOB_LOCATION', jobLocation);
+setenv('MDCE_STORAGE_LOCATION', storageLocation);
+setenv('MDCE_STORAGE_CONSTRUCTOR', storageConstructor);
+
+edit parallel.cluster.generic.independentDecodeFcn
+
+for i = 1:props.NumberOfTasks
+ setenv('MDCE_TASK_LOCATION', taskLocations{i});
+ constructSchedulerCommand;
+end
+
+function props = workerDecodeFunc(props)
+% Read the environment variables:
+storageConstructor = getenv('MDCE_STORAGE_CONSTRUCTOR');
+storageLocation = getenv('MDCE_STORAGE_LOCATION');
+jobLocation = getenv('MDCE_JOB_LOCATION');
+taskLocation = getenv('MDCE_TASK_LOCATION');
+%
+% Set props object properties from the local variables:
+set(props, 'StorageConstructor', storageConstructor);
+set(props, 'StorageLocation', storageLocation);
+set(props, 'JobLocation', jobLocation);
+set(props, 'TaskLocation', taskLocation);
+
