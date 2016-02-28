@@ -1,0 +1,9 @@
+parpool('local',2) % Create pool
+spmd
+ codist = codistributor1d(3,[4,12]);
+ Z = zeros(3,3,16,codist);
+ Z = Z + labindex;
+end
+Z % View results in client.
+ % Z is a distributed array here.
+delete(gcp) % Stop pool
