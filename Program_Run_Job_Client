@@ -1,0 +1,76 @@
+% Create a Scheduler Object
+
+c = parcluster('MyGenericProfile')
+
+c.JobStorageLocation = '\\share\scratch\jobdata'
+c.HasSharedFilesystem = true
+
+c.ClusterMatlabRoot = '\\apps\matlab\'
+
+c
+
+c.IndependentSubmitFcn = @mysubmitfunc
+
+% Create a job
+
+j = createJob(c)
+
+% Create tasks 
+
+createTask(j, @rand, 1, {3,3});
+createTask(j, @rand, 1, {3,3});
+createTask(j, @rand, 1, {3,3});
+createTask(j, @rand, 1, {3,3});
+createTask(j, @rand, 1, {3,3});
+
+j.Tasks
+T = createTask(job1, @rand, 1, {{3,3} {3,3} {3,3} {3,3} {3,3}});
+
+%Submit a Job to the Job Queue
+
+submit(j)
+wait(j)
+
+%  Retrieve the Job's Results
+results = fetchOutputs(j);
+
+results{1:5}
+ 0.9501 0.4860 0.4565
+ 0.2311 0.8913 0.0185
+ 0.6068 0.7621 0.8214
+ 0.4447 0.9218 0.4057
+ 0.6154 0.7382 0.9355
+ 0.7919 0.1763 0.9169
+ 0.4103 0.3529 0.1389
+ 0.8936 0.8132 0.2028
+ 0.0579 0.0099 0.1987
+  0.6038 0.0153 0.9318
+ 0.2722 0.7468 0.4660
+ 0.1988 0.4451 0.4186
+ 0.8462 0.6721 0.6813
+ 0.5252 0.8381 0.3795
+ 0.2026 0.0196 0.8318
+ 
+% Supplied Submit and Decode Functions
+matlabroot/toolbox/distcomp/examples/integration
+
+% Manage Jobs with Generic Scheduler
+
+% Save Job Scheduler Data
+for ii = 1:props.NumberOfTasks
+ define scheduler command per task
+ end
+ submit job to scheduler
+ data_array = parse data returned from scheduler %possibly NumberOfTasks-by-2 matrix
+ setJobClusterData(cluster, job, data_array)
+ 
+for ii = 1:props.NumberOfTasks
+ submit task to scheduler
+ %Per-task settings:
+ data_array(1,ii) = ... parse string returned from scheduler
+ data_array(2,ii) = ... save ID returned from scheduler
+ etc
+ end
+ setJobClusterData(scheduler, job, data_array)
+
+% Define Scheduler Commands in User Functions
