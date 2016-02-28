@@ -1,0 +1,16 @@
+#edit mywave
+
+parfor i = 1:1024
+ A(i) = sin(i*2*pi/1024);
+end
+
+#job = batch('mywave','Pool',3)
+
+#wait(job)
+#load(job,'A')
+#plot(A)
+
+#delete(job)
+#clear job
+
+#Run Script as Batch Job from the Current Folder Browser
