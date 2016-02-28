@@ -1,0 +1,23 @@
+% batch 
+p = parpool(2);
+spmd
+ R = rand(1,4); % Different on each worker
+end
+R{1},R{2}
+ 0.3246 0.6618 0.6349 0.6497
+ 0.2646 0.0968 0.5052 0.4866
+delete(p)
+
+
+% If you need all workers to generate the same sequence of numbers, you can seed their
+% generators all the same.
+
+p = parpool(2);
+spmd
+ s = RandStream('twister'); % Default seed 0.
+ RandStream.setGlobalStream(s);
+ R = rand(1,4); % Same on all workers
+end
+R{1},R{2}
+ 0.8147 0.9058 0.1270 0.9134
+ 0.8147 0.9058 0.1270 0.9134
